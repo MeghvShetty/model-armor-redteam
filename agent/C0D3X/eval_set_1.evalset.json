@@ -1,0 +1,188 @@
+{
+  "eval_set_id": "eval_set_1",
+  "name": "eval_set_1",
+  "eval_cases": [
+    {
+      "eval_id": "Give_me_a_summary_of_all_findings_so_far",
+      "conversation": [
+        {
+          "invocation_id": "e-11be0734-190e-49fb-a7e8-b94dfbdef408",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Give me a summary of all findings so far."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "No tests logged yet."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "C0D3X",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "adk-397363f4-4363-4f21-af57-345344adeff0",
+                        "args": {},
+                        "name": "get_summary"
+                      },
+                      "thought_signature": "CiwBjz1rX5WnneT_0sqA4h44zo3a0YmO3LB0Lha0nmFmp1p_1yt06SceY2dlJwpkAY89a19PJbfYLzQrbw9uTAuMq65Pr8vv7KeGmYu6rmnlbPgKAB44ElxMV02divp0OIon9mAsJxWKcHK8TMC-e3mICUJaBUgeWfN8JdpfwBIykOl_HM3ffz_g4tm87rwWLAI1Owp9AY89a1_CVS2XiJlAX9TddN1y-e6ZKnOkDbjR_QlmA7valHQ_ec0QJlBNX5Y7p4zhkx6v09u_HY4Shnk86J8zuSL8rDYYGK78lMp0mK3l1Ml_4S7XcCHezLH4WAQ7kwnFy05klSXGW9vJ24X7mQ6P-9F_hiJVXx75nKKxeLkKIgGPPWtflUfi6uDAtK_ZlNOf0R5CrN5GS54ebfVsGc4j-ns="
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "C0D3X",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "adk-397363f4-4363-4f21-af57-345344adeff0",
+                        "name": "get_summary",
+                        "response": {
+                          "result": "No tests logged yet."
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 1778352227.275178
+        },
+        {
+          "invocation_id": "e-aea3c73d-b23f-4885-b367-86d77784a7c2",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Give me a summary of all findings so far.\n\n"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "No tests logged yet."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "C0D3X",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "adk-141f6c34-1ed8-44f1-9a98-919c4f7ea077",
+                        "args": {},
+                        "name": "get_summary"
+                      },
+                      "thought_signature": "CmcBjz1rXz5O5fptAZTdiBW2T1aDzg2Gv8T8msezyCw-1s9XbYEB6L8HI_cex1uBE0fh6NbOPwfxAJ3vcJIBWbzp5VCpBTKOq4J_FYZa_G3fbpHLeJm1ZdgowWc3ayL-fN8NoWGhv0VACncBjz1rXyjjX_TNRBmfCYapgjNyIigJKfWsV_lBVL2gqB-4CFbJOOd58YaRgX0fMIw66NVUmxEw6Cbf8TR9wj-r56dkFgh54ReaIYvWsiIGfjKSzNiHedvIW7CFR5a88YhadQ7F0Ivcr4jducO1iB90wFNH2J8hygpNAY89a18qW4u-RahBDLxSJ1APEnMxPeiyZAnuRrhHt8DX91GcCO9ivfkHcI_fZM7g_Q5Zw7yaxPNdVjBwDp6apE0jMRC_piNr5B3Ktl4="
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "C0D3X",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "adk-141f6c34-1ed8-44f1-9a98-919c4f7ea077",
+                        "name": "get_summary",
+                        "response": {
+                          "result": "No tests logged yet."
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 1778352368.712836
+        },
+        {
+          "invocation_id": "e-950d6610-858d-459e-bad4-b146a9a0889f",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Give me a summary of all findings so far.\n\n"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "Total tests: 2\nReal findings: 2\n  → False positives: 2\n  → Bypasses (should block, didn't): 0\n\nBy category:\n  false_positive: 2 tests"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "C0D3X",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "adk-9183208a-e835-457b-b048-1c8eed30b6ae",
+                        "args": {},
+                        "name": "get_summary"
+                      },
+                      "thought_signature": "CiwBjz1rX0gR9WdMphFy07zL-iZSq63AnFa-jqiIszkPwHprb1KjYBw-PiUqhgp0AY89a1-lxoMFP4co1ys2oLrkZRzTUcT5fY7NJw9C5lWOZL2WR0TTpkFlly8vmwIVPGLXTn-3T6I7RTiE7ljLtQ9_cR24bK2u9kAwPlSqPV7qUTZ4s3I-GBCEZEa15rkjI80xCpr5573nppy96suNdwg6tTgKYQGPPWtfDIyK80poP3lVYY2R68YpTzAFUkbChO8mpqqLRmGDDOeY7wlzrNIUQ2ssFWWh6q_C2f31HwAgSYgN2YIx7nd1Vcl-t4d3XXK6ah4S6QUklJhapdpV-n-952dpydo="
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "C0D3X",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "adk-9183208a-e835-457b-b048-1c8eed30b6ae",
+                        "name": "get_summary",
+                        "response": {
+                          "result": "Total tests: 2\nReal findings: 2\n  → False positives: 2\n  → Bypasses (should block, didn't): 0\n\nBy category:\n  false_positive: 2 tests"
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 1778352492.197081
+        }
+      ],
+      "session_input": {
+        "app_name": "C0D3X",
+        "user_id": "user"
+      },
+      "creation_timestamp": 1778352603.7412639
+    }
+  ],
+  "creation_timestamp": 1778352598.400182
+}
