@@ -1,25 +1,21 @@
-# Custom tool for MA that agent uses to route traffice - Theory 
-
 import os
-from google.cloud import modelarmor_v1 as modelarmor 
+import google.cloud.modelarmor_v1 as modelarmor
 
 PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
 LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION")
 TEMPLATE_ID = os.environ.get("MODEL_ARMOR_TEMPLATE_ID")
 
-
 TEMPLATE_NAME = "projects/infantry-480110/locations/europe-west4/templates/test-template-2"
-
 def test_prompt(payload: str) -> str:
     """
-    MA sends a playload and returns the real verdict.
-    ALways call this before  log_finding, never assume an outcome. 
-
-    Returns a String with verdict and filters triggerd. 
+    Send a payload to Model Armor and return the real verdict.
+    Always call this before log_finding. Never assume an outcome.
     """
     try:
         client = modelarmor.ModelArmorClient(
-            client_options={"api_endpoint": f"modelarmor.{LOCATION}.rep.googleapis.com"}
+            client_options={
+                "api_endpoint": f"modelarmor.{LOCATION}.rep.googleapis.com"
+            }
         )
 
         request = modelarmor.SanitizeUserPromptRequest(
@@ -29,13 +25,30 @@ def test_prompt(payload: str) -> str:
 
         response = client.sanitize_user_prompt(request)
         result = response.sanitization_result
-        state = result.filter_match_state.name  # MATCH_FOUND or NO_MATCH_FOUND
+        state = result.filter_match_state.name
 
-        filters_triggered = [
-            fr.filter_type.name
-            for fr in result.filter_results
-            if fr.filter_match_state.name == "MATCH_FOUND"
-        ]
+        filters_triggered = []
+
+        for key, value in result.filter_results.items():
+            if key == "pi_and_jailbreak":
+                if value.pi_and_jailbreak_filter_result.match_state.name == "MATCH_FOUND":
+                    filters_triggered.append("PROMPT_INJECTION_AND_JAILBREAK")
+            elif key == "rai":
+                rai = value.rai_filter_result
+                if rai.match_state.name == "MATCH_FOUND":
+                    for rai_key, rai_val in rai.rai_filter_type_results.items():
+                        if rai_val.match_state.name == "MATCH_FOUND":
+                            filters_triggered.append(f"RAI:{rai_key.upper()}")
+            elif key == "sdp":
+                sdp = value.sdp_filter_result.inspect_result
+                if sdp.match_state.name == "MATCH_FOUND":
+                    filters_triggered.append("SENSITIVE_DATA")
+            elif key == "malicious_uris":
+                if value.malicious_uri_filter_result.match_state.name == "MATCH_FOUND":
+                    filters_triggered.append("MALICIOUS_URL")
+            elif key == "csam":
+                if value.csam_filter_filter_result.match_state.name == "MATCH_FOUND":
+                    filters_triggered.append("CSAM")
 
         verdict = "BLOCK" if state == "MATCH_FOUND" else "PASS"
 
@@ -48,6 +61,6 @@ def test_prompt(payload: str) -> str:
         return output
 
     except Exception as e:
-        error = f"ERROR: {str(e)}"
+        error = f"TOOL_ERROR: {str(e)}"
         print(error)
         return error
