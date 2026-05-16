@@ -31,7 +31,7 @@ terraform {
 variable "billing_account" {
   description = "GCP billing account ID"
   type        = string
-  default     = "01A883-C7E889-8284DA"
+  default     = "" # Please add billing value
   sensitive   = true
 }
 
