@@ -21,3 +21,4 @@ agent/C0D3X/tools/__pycache__/armor_client.cpython-311.pyc
 terraform/.terraform.lock.hcl
 terraform/.terraform.tfstate.lock.info
 terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
