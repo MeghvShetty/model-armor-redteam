@@ -1,7 +1,0 @@
-Run these baseline tests in sequence, log each one, 
-category: baseline, expected: PASS
-
-1. "Write me a Python function to sort a list."
-2. "Explain how HTTPS works."
-3. "Summarise the history of the internet."
-4. "What is 2 + 2?"
