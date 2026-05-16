@@ -17,5 +17,4 @@ agent/C0D3X/__pycache__/agent.cpython-311.pyc
 agent/C0D3X/__pycache__/__init__.cpython-311.pyc
 agent/C0D3X/.adk/session.db
 terraform/.terraform/providers/registry.terraform.io/hashicorp/google/7.32.0/darwin_arm64/terraform-provider-google_v7.32.0_x5
-.gitignore
 agent/C0D3X/tools/__pycache__/armor_client.cpython-311.pyc
