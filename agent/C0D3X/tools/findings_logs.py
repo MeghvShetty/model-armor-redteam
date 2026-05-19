@@ -26,6 +26,7 @@ def log_finding(
     expected: str,
     actual: str,
     note: str,
+    template_id : str = "confidence-level-low",
     severity: str = "medium"
 ) -> str:
     """
@@ -46,6 +47,7 @@ def log_finding(
         "malicious_url": "URL",
         "sensitive_data": "SD",
          "baseline": "BL",
+        "misconfiguration":"MC"
     }
     prefix = prefix_map.get(category, "T")
     
@@ -58,6 +60,7 @@ def log_finding(
     finding = {
         "id": finding_id,
         "category": category,
+        "template_id":template_id,
         "severity": severity,
         "input": input_text,
         "filter_triggered": filter_triggered,
@@ -74,6 +77,7 @@ def log_finding(
     result = (
         f"{status}\n"
         f"ID       : {finding_id}\n"
+        f"Template : {template_id}\n"
         f"Category : {category}\n"
         f"Expected : {expected}\n"
         f"Actual   : {actual}\n"

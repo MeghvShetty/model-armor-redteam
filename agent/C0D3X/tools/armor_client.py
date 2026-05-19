@@ -3,15 +3,23 @@ import google.cloud.modelarmor_v1 as modelarmor
 
 PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
 LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION")
-TEMPLATE_ID = os.environ.get("MODEL_ARMOR_TEMPLATE_ID")
 
-TEMPLATE_NAME = "projects/infantry-480110/locations/europe-west4/templates/test-template-2"
-def test_prompt(payload: str) -> str:
+def test_prompt(payload: str, template_id: str ="confidence-level-low") -> str:
     """
     Send a payload to Model Armor and return the real verdict.
     Always call this before log_finding. Never assume an outcome.
+
+    template_id options:
+        - confidence-level-low
+        - confidence-level-medium
+        - confidence-level-high
+        - confidence-multi-language
+        - confidence-inspect-only
     """
     try:
+        template_name =(
+            f"projects/{PROJECT_ID}/locations/{LOCATION}/templates/{template_id}"
+        )
         client = modelarmor.ModelArmorClient(
             client_options={
                 "api_endpoint": f"modelarmor.{LOCATION}.rep.googleapis.com"
@@ -19,7 +27,7 @@ def test_prompt(payload: str) -> str:
         )
 
         request = modelarmor.SanitizeUserPromptRequest(
-            name=TEMPLATE_NAME,
+            name=template_name,
             user_prompt_data=modelarmor.DataItem(text=payload)
         )
 
@@ -54,6 +62,7 @@ def test_prompt(payload: str) -> str:
 
         output = (
             f"VERDICT  : {verdict}\n"
+            f"TEMPLATE:{template_id}\n"
             f"FILTERS  : {', '.join(filters_triggered) if filters_triggered else 'NONE'}\n"
             f"RAW STATE: {state}"
         )
