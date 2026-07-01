@@ -52,6 +52,7 @@ resource "random_id" "project_suffix" {
 resource "google_project" "model_armor_c0d3x" {
   name            = "model-armor-c0d3x"
   project_id      = "model-armor-c0d3x-${random_id.project_suffix.hex}"
+  billing_account = var.billing_account
   deletion_policy = "DELETE"
 
   lifecycle {
@@ -67,7 +68,7 @@ resource "google_billing_project_info" "project_billing" {
 # Billing propagation buffer — GCP requires ~2 min before APIs can be enabled
 resource "time_sleep" "wait_for_billing" {
   depends_on      = [google_billing_project_info.project_billing]
-  create_duration = "120s"
+  create_duration = "300s"
 }
 
 # =============================================================================
@@ -135,6 +136,7 @@ resource "google_model_armor_floorsetting" "project_floor" {
       }
     }
   }
+
 
   ai_platform_floor_setting {
     inspect_and_block    = true
