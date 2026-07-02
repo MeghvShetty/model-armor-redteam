@@ -31,7 +31,7 @@ terraform {
 variable "billing_account" {
   description = "GCP billing account ID"
   type        = string
-  default     = "" # Please add billing value
+  default     = "015018-F06FF4-60B20A" # Please add billing value
   sensitive   = true
 }
 
@@ -95,6 +95,14 @@ resource "google_project_service" "aiplatform_api" {
 # pi_and_jailbreak, malicious_uri, and sdp are intentionally DISABLED at
 # floor level — these are tested exclusively via template-level enforcement
 # to isolate control behaviour per confidence tier.
+#
+# rai_filters confidence_level is explicitly set to HIGH (the most
+# permissive value) rather than left unset. Leaving it unset causes the
+# API to default to its strictest interpretation, which would reject any
+# template configured with MEDIUM_AND_ABOVE or HIGH as "less strict than
+# the floor" — blocking the medium/high/multi-language/inspect-only
+# templates below. HIGH keeps the floor as a true minimum baseline while
+# still allowing every confidence tier in this project to be provisioned.
 # =============================================================================
 
 resource "google_model_armor_floorsetting" "project_floor" {
@@ -123,20 +131,23 @@ resource "google_model_armor_floorsetting" "project_floor" {
     }
     rai_settings {
       rai_filters {
-        filter_type = "SEXUALLY_EXPLICIT"
+        filter_type      = "SEXUALLY_EXPLICIT"
+        confidence_level = "HIGH"
       }
       rai_filters {
-        filter_type = "HATE_SPEECH"
+        filter_type      = "HATE_SPEECH"
+        confidence_level = "HIGH"
       }
       rai_filters {
-        filter_type = "HARASSMENT"
+        filter_type      = "HARASSMENT"
+        confidence_level = "HIGH"
       }
       rai_filters {
-        filter_type = "DANGEROUS"
+        filter_type      = "DANGEROUS"
+        confidence_level = "HIGH"
       }
     }
   }
-
 
   ai_platform_floor_setting {
     inspect_and_block    = true
@@ -159,15 +170,16 @@ locals {
 
 # =============================================================================
 # Template 1: Low Confidence (your original)
-# Catches the broadest surface — flags anything with even weak signal.
-# Expected: high true-positive rate, elevated false-positive rate.
-# Test focus: sensitivity floor, obfuscated payload detection.
 # =============================================================================
 
 resource "google_model_armor_template" "confidence_low" {
   location    = var.region
   template_id = "confidence-level-low"
   project     = google_project.model_armor_c0d3x.project_id
+  depends_on = [
+    google_model_armor_floorsetting.project_floor,
+    google_project_service.modelarmor_api,
+  ]
 
   labels = {
     environment = "redteam"
@@ -215,21 +227,20 @@ resource "google_model_armor_template" "confidence_low" {
     }
     enforcement_type = local.default_metadata.enforcement_type
   }
-
-  depends_on = [google_project_service.modelarmor_api]
 }
 
 # =============================================================================
 # Template 2: Medium Confidence
-# Production-representative baseline — balanced threshold.
-# Expected: catches explicit attacks, may miss obfuscated variants.
-# Test focus: benchmarking real-world deployment posture.
 # =============================================================================
 
 resource "google_model_armor_template" "confidence_medium" {
   location    = var.region
   template_id = "confidence-level-medium"
   project     = google_project.model_armor_c0d3x.project_id
+  depends_on = [
+    google_model_armor_floorsetting.project_floor,
+    google_project_service.modelarmor_api,
+  ]
 
   labels = {
     environment = "redteam"
@@ -277,21 +288,20 @@ resource "google_model_armor_template" "confidence_medium" {
     }
     enforcement_type = local.default_metadata.enforcement_type
   }
-
-  depends_on = [google_project_service.modelarmor_api]
 }
 
 # =============================================================================
 # Template 3: High Confidence
-# Strictest threshold — blocks only high-certainty matches.
-# Expected: lowest false-positive rate, highest bypass risk.
-# Test focus: whether sophisticated payloads evade strict filters.
 # =============================================================================
 
 resource "google_model_armor_template" "confidence_high" {
   location    = var.region
   template_id = "confidence-level-high"
   project     = google_project.model_armor_c0d3x.project_id
+  depends_on = [
+    google_model_armor_floorsetting.project_floor,
+    google_project_service.modelarmor_api,
+  ]
 
   labels = {
     environment = "redteam"
@@ -339,22 +349,20 @@ resource "google_model_armor_template" "confidence_high" {
     }
     enforcement_type = local.default_metadata.enforcement_type
   }
-
-  depends_on = [google_project_service.modelarmor_api]
 }
 
 # =============================================================================
 # Template 4: Multi-Language Detection
-# Medium confidence + multi-language scanning enabled.
-# Expected: catches unicode smuggling, l33tspeak, and language-switching
-# evasion techniques that the standard templates miss.
-# Test focus: obfuscated payload variants across non-English inputs.
 # =============================================================================
 
 resource "google_model_armor_template" "multi_language" {
   location    = var.region
   template_id = "confidence-multi-language"
   project     = google_project.model_armor_c0d3x.project_id
+  depends_on = [
+    google_model_armor_floorsetting.project_floor,
+    google_project_service.modelarmor_api,
+  ]
 
   labels = {
     environment = "redteam"
@@ -402,22 +410,20 @@ resource "google_model_armor_template" "multi_language" {
     }
     enforcement_type = local.default_metadata.enforcement_type
   }
-
-  depends_on = [google_project_service.modelarmor_api]
 }
 
 # =============================================================================
 # Template 5: Inspect Only — Shadow Mode
-# All filters at medium confidence — observe without blocking.
-# Expected: logs every filter match with zero impact on availability.
-# Test focus: baselining what a production deployment would block before
-# committing to enforcement — safe for pre-production pipeline integration.
 # =============================================================================
 
 resource "google_model_armor_template" "inspect_only" {
   location    = var.region
   template_id = "confidence-inspect-only"
   project     = google_project.model_armor_c0d3x.project_id
+  depends_on = [
+    google_model_armor_floorsetting.project_floor,
+    google_project_service.modelarmor_api,
+  ]
 
   labels = {
     environment = "redteam"
@@ -465,8 +471,6 @@ resource "google_model_armor_template" "inspect_only" {
     }
     enforcement_type = "INSPECT_ONLY"
   }
-
-  depends_on = [google_project_service.modelarmor_api]
 }
 
 # =============================================================================
