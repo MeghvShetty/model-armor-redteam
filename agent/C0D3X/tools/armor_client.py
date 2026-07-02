@@ -2,7 +2,7 @@ import os
 import google.cloud.modelarmor_v1 as modelarmor
 
 PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
-LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION")
+LOCATION = os.environ.get("MODEL_ARMOR_LOCATION","europe-west4")
 
 def test_prompt(payload: str, template_id: str ="confidence-level-low") -> str:
     """
